@@ -38,7 +38,7 @@ describe("Formatter", () => {
         format(event.start.date, 'ALL_DAY'),
         Formatter.verbiage.DASH,
         format('2017-01-02', 'ALL_DAY') + ":",
-        `**[${event.summary}](${event.htmlLink})** \`✓\` · [Join hangout](${event.hangoutLink})`
+        `**[${event.summary}](${event.htmlLink})** ✔︎ · [Join hangout](${event.hangoutLink})`
       ].join(" "));
     });
 
@@ -431,9 +431,9 @@ describe("Formatter", () => {
       }];
       expect(events.map(Formatter.formatSelfAttendanceFor)).toEqual([
         "",
-        " `✓`",
-        " `tentative`",
-        " `declined`",
+        " ✔︎",
+        " _(tentative)_",
+        " _(declined)_",
         ""
       ]);
     });
