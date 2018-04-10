@@ -46,6 +46,7 @@ const EventFormatter = {
 
   formatEventWithDetails: function(event, tz, optionalTodayYMD, options) {
     const time = this.formatEventDateTime(event, tz, optionalTodayYMD);
+    const attendance = this.formatSelfAttendanceFor(event);
     let optionalData = "";
     if (event.description) {
       optionalData += `${event.description}  \n`;
@@ -53,7 +54,7 @@ const EventFormatter = {
     if (event.location) {
       optionalData += `_Where: ${event.location}_  \n`;
     }
-    return `${time}  \n**${this.summaryLink(event)}**  \n${optionalData}${this.formatHangoutLinkFor(event, options)}`;
+    return `${time}${attendance}  \n**${this.summaryLink(event)}**  \n${optionalData}${this.formatHangoutLinkFor(event, options)}`;
   },
 
   formatEventWithoutDetails: function(event, tz, optionalTodayYMD, options) {
@@ -122,11 +123,9 @@ const EventFormatter = {
     const selfAttendee = (event.attendees || []).find((ea) => ea.self);
     const response = selfAttendee ? selfAttendee.responseStatus : null;
     if (response === "accepted") {
-      return " _(✓)_ ";
-    } else if (response === "declined") {
-      return " _(declined)_ ";
-    } else if (response === "tentative") {
-      return " _(tentative)_ ";
+      return " ✔︎";
+    } else if (response === "declined" || response === "tentative") {
+      return ` _(${response})_`;
     } else {
       return "";
     }
