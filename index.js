@@ -122,11 +122,11 @@ const EventFormatter = {
     const selfAttendee = (event.attendees || []).find((ea) => ea.self);
     const response = selfAttendee ? selfAttendee.responseStatus : null;
     if (response === "accepted") {
-      return " _(✓)_ ";
+      return " `✓`";
     } else if (response === "declined") {
-      return " _(declined)_ ";
+      return " `declined`";
     } else if (response === "tentative") {
-      return " _(tentative)_ ";
+      return " `tentative`";
     } else {
       return "";
     }
