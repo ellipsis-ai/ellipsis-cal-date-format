@@ -58,7 +58,7 @@ const EventFormatter = {
 
   formatEventWithoutDetails: function(event, tz, optionalTodayYMD, options) {
     const time = this.formatEventDateTime(event, tz, optionalTodayYMD);
-    return `${time}: **${this.summaryLink(event)}**${this.formatHangoutLinkFor(event, options)}`;
+    return `${time}: **${this.summaryLink(event)}**${this.formatSelfAttendanceFor(event)}${this.formatHangoutLinkFor(event, options)}`;
   },
 
   formatEventDateTime: function(event, tz, optionalTodayYMD) {
@@ -116,6 +116,20 @@ const EventFormatter = {
 
     formattedEventTime += ` ${start.format(this.formats.TZ)}`;
     return formattedEventTime;
+  },
+
+  formatSelfAttendanceFor: function(event) {
+    const selfAttendee = (event.attendees || []).find((ea) => ea.self);
+    const response = selfAttendee ? selfAttendee.responseStatus : null;
+    if (response === "accepted") {
+      return " _(✓)_ ";
+    } else if (response === "declined") {
+      return " _(declined)_ ";
+    } else if (response === "tentative") {
+      return " _(tentative)_ ";
+    } else {
+      return "";
+    }
   }
 };
 
