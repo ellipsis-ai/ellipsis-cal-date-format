@@ -39,7 +39,8 @@ const EventFormatter = {
   },
 
   summaryLink: function(event) {
-    const linkText = `${event.summary}${this.formatAttendeesFor(event)}`;
+    const summary = event.summary || "(untitled event)";
+    const linkText = `${summary}${this.formatAttendeesFor(event)}`;
     const escaped = linkText.replace(/([\[\]<>])/g, "\\$1");
     return `[${escaped}](${event.htmlLink})`;
   },

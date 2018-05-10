@@ -310,6 +310,22 @@ describe("Formatter", () => {
       };
       expect(Formatter.summaryLink(event)).toBe("[\\[Meeting \\<\\> Time\\] - joe@whitehouse.gov, Obama](https://www.google.com/calendar/event)");
     });
+
+    it("calls the event untitled if there is no summary text", () => {
+      const event = {
+        htmlLink: 'https://www.google.com/calendar/event',
+        attendees: [{
+          email: "joe@whitehouse.gov"
+        }, {
+          email: "barack@whitehouse.gov",
+          displayName: "Obama"
+        }, {
+          email: "valerie@whitehouse.gov",
+          self: true
+        }]
+      };
+      expect(Formatter.summaryLink(event)).toBe("[(untitled event) - joe@whitehouse.gov, Obama](https://www.google.com/calendar/event)");
+    });
   });
 
   describe("attendance", () => {
