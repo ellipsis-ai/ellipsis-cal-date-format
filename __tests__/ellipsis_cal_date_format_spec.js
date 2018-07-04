@@ -139,6 +139,24 @@ describe("Formatter", () => {
         Formatter.verbiage.ALL_DAY_SUFFIX
       ].join(" "));
     });
+
+    it('includes the day of the week if flag set', () => {
+      const event1 = {
+        start: {
+          date: '2017-01-01'
+        },
+        end: {
+          date: '2017-01-03'
+        }
+      };
+      expect(Formatter.formatAllDayEvent(event1, null, true)).toBe([
+        format(event1.start.date, 'DAY_OF_WEEK') + ",",
+        format(event1.start.date, 'ALL_DAY'),
+        Formatter.verbiage.DASH,
+        format("2017-01-02", 'DAY_OF_WEEK') + ",",
+        format("2017-01-02", 'ALL_DAY')
+      ].join(" "));
+    });
   });
 
   describe("formatRegularEvent", () => {
@@ -289,6 +307,27 @@ describe("Formatter", () => {
         Formatter.verbiage.DASH,
         formatTz(event.end.dateTime, 'TIME', 'America/Toronto'),
         formatTz(event.start.dateTime, 'TZ', 'America/Toronto')
+      ].join(" "));
+    });
+
+    it('includes the day of the week if flag set', () => {
+      const event = {
+        start: {
+          dateTime: '2017-01-01T12:00:00.00Z'
+        },
+        end: {
+          dateTime: '2017-01-02T17:00:00.00Z'
+        }
+      };
+      expect(Formatter.formatRegularEvent(event, null, null, true)).toBe([
+        formatTz(event.start.dateTime, 'DAY_OF_WEEK') + ",",
+        formatTz(event.start.dateTime, 'DATE'),
+        formatTz(event.start.dateTime, 'TIME'),
+        Formatter.verbiage.DASH,
+        formatTz(event.end.dateTime, 'DAY_OF_WEEK') + ",",
+        formatTz(event.end.dateTime, 'DATE'),
+        formatTz(event.end.dateTime, 'TIME'),
+        formatTz(event.start.dateTime, 'TZ')
       ].join(" "));
     });
   });
