@@ -4,6 +4,7 @@ const moment = require('moment-timezone');
 
 const EventFormatter = {
   formats: {
+    DAY_OF_WEEK: 'dddd',
     ALL_DAY: 'll',
     DATE: 'ddd, MMM D',
     YMD: 'Y-MM-DD',
@@ -63,22 +64,30 @@ const EventFormatter = {
     return `${time}: **${this.summaryLink(event)}**${this.formatSelfAttendanceFor(event)}${this.formatHangoutLinkFor(event, options)}`;
   },
 
-  formatEventDateTime: function(event, tz, optionalTodayYMD) {
+  formatEventDateTimeWithDay: function(event, tz, optionalTodayYMD) {
+    return this.formatEventDateTime(event, tz, optionalTodayYMD, true);
+  },
+
+  formatEventDateTime: function(event, tz, optionalTodayYMD, includeDay) {
     if (!event) {
       return "";
     } else if (event.start.date) {
-      return this.formatAllDayEvent(event, optionalTodayYMD);
+      return this.formatAllDayEvent(event, optionalTodayYMD, includeDay);
     } else {
-      return this.formatRegularEvent(event, tz, optionalTodayYMD);
+      return this.formatRegularEvent(event, tz, optionalTodayYMD, includeDay);
     }
   },
 
-  formatAllDayEvent: function(event, optionalTodayYMD) {
-    const formattedStartDate = moment(event.start.date).format(this.formats.ALL_DAY);
-    const sameAsToday = optionalTodayYMD && moment(event.start.date).format(this.formats.YMD) === optionalTodayYMD;
+  formatAllDayEvent: function(event, optionalTodayYMD, includeDay) {
+    const start = moment(event.start.date);
+    const startDay = includeDay ? `${start.format(this.formats.DAY_OF_WEEK)}, ` : "";
+    const formattedStartDate = startDay + start.format(this.formats.ALL_DAY);
+    const sameAsToday = optionalTodayYMD && start.format(this.formats.YMD) === optionalTodayYMD;
     let formattedEventTime = sameAsToday ? this.verbiage.TODAY : formattedStartDate;
     if (!event.endTimeUnspecified && event.end.date) {
-      let formattedEndDate = moment(event.end.date).subtract(1, 'days').format(this.formats.ALL_DAY);
+      const end = moment(event.end.date).subtract(1, 'days');
+      const endDay = includeDay ? `${end.format(this.formats.DAY_OF_WEEK)}, ` : "";
+      let formattedEndDate = endDay + end.format(this.formats.ALL_DAY);
       if (formattedEndDate !== formattedStartDate) {
         formattedEventTime += ` ${this.verbiage.DASH} ${formattedEndDate}`;
       }
@@ -89,16 +98,19 @@ const EventFormatter = {
     return formattedEventTime;
   },
 
-  formatRegularEvent: function(event, tz, optionalTodayYMD) {
+  formatRegularEvent: function(event, tz, optionalTodayYMD, includeDay) {
     const eventTz = event.start.timeZone || tz || this.defaultTimeZone;
     let start = moment(event.start.dateTime).tz(eventTz);
+    let startDay = includeDay ? `${start.format(this.formats.DAY_OF_WEEK)}, ` : "";
     let startDate = start.format(this.formats.DATE);
     let startTime = start.format(this.formats.TIME);
     let end;
+    let endDay = '';
     let endDate = '';
     let endTime = '';
     if (!event.endTimeUnspecified) {
       end = moment(event.end.dateTime).tz(eventTz);
+      endDay = includeDay ? `${end.format(this.formats.DAY_OF_WEEK)}, ` : "";
       endDate = end.format(this.formats.DATE);
       endTime = end.format(this.formats.TIME);
     }
@@ -109,9 +121,9 @@ const EventFormatter = {
       excludeDate = sameStartDate && (!endDate || endDate === startDate);
     }
 
-    let formattedEventTime = excludeDate ? startTime : `${startDate} ${startTime}`;
+    let formattedEventTime = excludeDate ? startTime : `${startDay}${startDate} ${startTime}`;
     if (endDate && endDate !== startDate) {
-      formattedEventTime += ` ${this.verbiage.DASH} ${endDate} ${endTime}`;
+      formattedEventTime += ` ${this.verbiage.DASH} ${endDay}${endDate} ${endTime}`;
     } else if (endTime) {
       formattedEventTime += ` ${this.verbiage.DASH} ${endTime}`;
     }
