@@ -12,7 +12,9 @@
   },
   "author": "Ellipsis Co. <luke@ellipsis.ai> (https://www.ellipsis.ai)",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "moment-timezone": "^0.5.23"
+  },
   "devDependencies": {
     "jest": "^23.6.0"
   }
