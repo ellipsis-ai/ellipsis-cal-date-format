@@ -1,6 +1,10 @@
 {
   "name": "ellipsis-cal-date-format",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ellipsis-ai/ellipsis-cal-date-format"
+  },
   "description": "Format calendar events into human-friendly text",
   "main": "index.js",
   "scripts": {
@@ -9,9 +13,9 @@
   "author": "Ellipsis Co. <luke@ellipsis.ai> (https://www.ellipsis.ai)",
   "license": "ISC",
   "dependencies": {
-    "moment-timezone": "^0.5.11"
+    "moment-timezone": "^0.5.23"
   },
   "devDependencies": {
-    "jest": "^19.0.2"
+    "jest": "^23.6.0"
   }
 }
